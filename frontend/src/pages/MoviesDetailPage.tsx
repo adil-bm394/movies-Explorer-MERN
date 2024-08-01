@@ -21,6 +21,7 @@ import {
   getCommentsFromIndexedDB,
 } from "../utils/LocalForage/LocalForage";
 import { addRating, addComment } from "../redux/slices/moviesSlice";
+import { Movie } from "../utils/interface/types";
 
 const MoviesDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,8 @@ const MoviesDetailPage: React.FC = () => {
 
   const movie = useSelector((state: RootState) =>
     state.movies.movies.find((m) => m.imdbID === movieId)
-  );
+  ) as Movie; // Assert type to Movie
+
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const userDetails = useSelector((state: RootState) => state.user.userDetails);
   const userId = userDetails?.id || "";
@@ -161,7 +163,7 @@ const MoviesDetailPage: React.FC = () => {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <FavoriteButton movieId={movie.imdbID} />
+                  <FavoriteButton movie={movie} />
                 </Box>
 
                 {/* Ratings */}
