@@ -12,7 +12,6 @@ import { addFavorite, removeFavorite } from "../../redux/slices/favoritesSlice";
 import { Movie } from "../../utils/interface/types";
 import { RootState, AppDispatch } from "../../redux/store";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Favorite, FavoriteBorder, Star } from "@mui/icons-material";
 
 const StarContainer = styled("div")({
@@ -26,30 +25,36 @@ const StarIcon = styled(Star)({
 
 interface MovieCardProps {
   movie: Movie;
-   isFavorite: boolean;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-
- // console.log("movies=>",movie.imdbID);
-
   const dispatch = useDispatch<AppDispatch>();
   const favorites = useSelector(
-    (state: RootState) => state.favorites.favorites
+    (state: RootState) => state.favorites.favorites || []
   );
-    console.log("Favourites Movies=>",favorites);
-
+  //console.log("Favourites Movies=>", typeof favorites, "=>", favorites);
+  console.log("Movies=>", typeof movie, "=>", movie); //we get imdbID of movies as string from favorite page 
 
   const isFavorite = favorites.some(
-    (favMovie) => favMovie?.imdbID === movie?.imdbID
+    (favMovie) => favMovie.imdbID === movie.imdbID
   );
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = async () => {
     if (isFavorite) {
-      dispatch(removeFavorite(movie.imdbID));
+      try {
+        await dispatch(removeFavorite(movie.imdbID)).unwrap();
+        toast.success("Removed from favorites!");
+      } catch (error) {
+        toast.error("Failed to remove from favorites.");
+      }
     } else if (isLoggedIn) {
-      dispatch(addFavorite(movie));
+      try {
+        await dispatch(addFavorite(movie)).unwrap();
+        toast.success("Added to favorites!");
+      } catch (error) {
+        toast.error("Failed to add to favorites.");
+      }
     } else {
       toast.error("You must be logged in to add favorite movies.");
     }
@@ -106,3 +111,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
 };
 
 export default MovieCard;
+
+
+

@@ -31,7 +31,7 @@ const MoviesListPage: React.FC = () => {
         <Grid container spacing={3}>
           {filteredMovies.map((movie) => (
             <Grid item xs={12} sm={6} md={4} key={movie.imdbID}>
-              <MovieCard movie={movie} isFavorite />
+              <MovieCard movie={movie}  />
             </Grid>
           ))}
         </Grid>

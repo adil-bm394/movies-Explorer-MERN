@@ -65,8 +65,33 @@ const removeFavoriteController = async (req, res) => {
   }
 };
 
+
+const getFavoritesController = async (req, res) => {
+  const user = req.user;
+
+  try {
+    const favoriteMovies = await MoviesModel.find({
+      imdbID: { $in: user.favorites },
+    });
+
+    res.status(statusCodes.OK).json({
+      success: "true",
+      favorites: favoriteMovies,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
+      success: "false",
+      error: error.message,
+      error,
+    });
+  }
+};
+
+
 module.exports = {
   moviesController,
   addFavoriteController,
   removeFavoriteController,
+  getFavoritesController
 };

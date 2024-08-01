@@ -26,6 +26,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = user;
+    req.token = token;
     next();
   } catch (error) {
     return res.status(statusCodes.UNAUTHORIZED).json({
