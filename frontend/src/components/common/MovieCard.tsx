@@ -28,6 +28,8 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
+  console.log("movies in movieCard",movie);
+
   return (
     <Grid item xs={12}>
       <Card sx={{ height: "100%", marginTop: 3 }}>

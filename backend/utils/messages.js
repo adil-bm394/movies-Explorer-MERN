@@ -12,6 +12,8 @@ const messages = {
   INTERNAL_SERVER_ERROR: "An internal server error occurred",
   MISSING_AUTH_HEADER: "Missing Authorization header",
   INVALID_OTP_TOKEN: "Invalid OTP token",
+  MOVIE_EXISTS:"Movies Already Exist",
+  MOVIE_NOT_EXISTS: "Movies Not Found"
 };
 
 module.exports = messages;

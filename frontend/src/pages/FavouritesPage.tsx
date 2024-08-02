@@ -13,6 +13,9 @@ const FavoritesPage: React.FC = () => {
     (state: RootState) => state.favorites
   );
 
+  const allFavorites = favorites.flat();
+  console.log("favorites Movies", allFavorites);
+
   useEffect(() => {
     dispatch(fetchFavorites());
   }, [dispatch]);
@@ -32,7 +35,7 @@ const FavoritesPage: React.FC = () => {
   return (
     <Container sx={{ marginTop: "15px" }}>
       <Grid container spacing={3}>
-        {favorites.map((movie) => (
+        {allFavorites.map((movie) => (
           <Grid item xs={12} sm={6} md={4} key={movie.imdbID}>
             <MovieCard movie={movie} />
           </Grid>

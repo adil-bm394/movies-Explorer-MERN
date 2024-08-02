@@ -25,8 +25,10 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movie }) => {
     if (isLoggedIn) {
       if (isFavorite) {
         dispatch(removeFavorite(movie.imdbID));
+        toast.success("Remove from Favourite");
       } else {
         dispatch(addFavorite(movie));
+        toast.success("Added to Favourite");
       }
     } else {
       toast.error("You must be logged in to add favorite movies.");

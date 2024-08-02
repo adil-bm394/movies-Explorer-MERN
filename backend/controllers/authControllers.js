@@ -67,8 +67,8 @@ const loginController = async (req, res) => {
     res.status(statusCodes.OK).json({
       success: "true",
       message: messages.LOGIN_SUCCESS,
-      user,
       token,
+      user
     });
   } catch (error) {
     console.log(error);

@@ -10,6 +10,8 @@ const initialState: MoviesState = {
 
 export const fetchMovies = createAsyncThunk("movies/fetchMovies", async () => {
   const response = await axios.get("http://localhost:8000/api/v1/movies");
+
+   console.log("response from backend ", response.data);
   return response.data;
 });
 

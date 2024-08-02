@@ -27,8 +27,12 @@ export const fetchFavorites = createAsyncThunk(
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      console.log(
+        "response for getllFAv from backend ",
+        response.data.favorites
+      );
 
-      return response.data.favorites; 
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(
         error.response ? error.response.data : error.message
@@ -40,19 +44,18 @@ export const fetchFavorites = createAsyncThunk(
 export const addFavorite = createAsyncThunk(
   "favorites/addFavorite",
   async (movie: Movie, { rejectWithValue, getState }) => {
-    const state: any = getState();
+    const state = getState() as any;
     const token = state.user.userDetails?.token;
 
     try {
+
       const response = await axios.post(
         "http://localhost:8000/api/v1/addFavorite",
-        { movieId: movie.imdbID },
+        { imdbID: movie.imdbID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      console.log("response from backend", response.data);
-
-      return response.data;
+        console.log("response backend for addFavourite",response.data.favorites);
+      return response.data.favorites;
     } catch (error: any) {
       return rejectWithValue(
         error.response ? error.response.data : error.message
@@ -68,11 +71,13 @@ export const removeFavorite = createAsyncThunk(
     const token = state.user.userDetails?.token;
 
     try {
+      
       const response = await axios.post(
         "http://localhost:8000/api/v1/removeFavorite",
-        { movieId: imdbID },
+        { imdbID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       return { imdbID };
     } catch (error: any) {
       return rejectWithValue(
@@ -104,7 +109,7 @@ const favoritesSlice = createSlice({
       })
       .addCase(addFavorite.fulfilled, (state, action) => {
         state.loading = false;
-        state.favorites.push(action.payload); 
+        state.favorites = action.payload;
       })
       .addCase(addFavorite.rejected, (state, action) => {
         state.loading = false;
@@ -116,7 +121,6 @@ const favoritesSlice = createSlice({
       .addCase(removeFavorite.fulfilled, (state, action) => {
         state.loading = false;
         const removedImdbID = action.payload.imdbID;
-
         state.favorites = state.favorites.filter(
           (movie) => movie.imdbID !== removedImdbID
         );

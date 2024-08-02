@@ -28,7 +28,7 @@ const useLogin = () => {
         "http://localhost:8000/api/v1/login",
         data
       );
-
+     // console.log("asdf",response.data);
       if (response.data.success) {
         const { user, token } = response.data;
         setLoginError(null);
@@ -38,7 +38,7 @@ const useLogin = () => {
             name: user.name,
             email: user.email,
             phone: user.phone,
-            token, // Add token to user state
+            token, 
           })
         );
         localStorage.setItem("authToken", token);
