@@ -156,12 +156,6 @@ const getFavoritesController = async (req, res) => {
 
 
 
-
-
-
-
-
-
 module.exports = {
   moviesController,
   addFavoriteController,

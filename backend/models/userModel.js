@@ -36,18 +36,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, required: true },
-  comments: [
-    {
-      movieId: { type: mongoose.Schema.Types.ObjectId, ref: "Movie" },
-      comment: String,
-    },
-  ],
-  ratings: [
-    {
-      movieId: { type: mongoose.Schema.Types.ObjectId, ref: "Movie" },
-      rating: Number,
-    },
-  ],
   favorites: [
     {
       Title: { type: String },
