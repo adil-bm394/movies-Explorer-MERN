@@ -119,6 +119,9 @@ export const fetchRatings = createAsyncThunk<
     const response = await axios.get(
       `http://localhost:8000/api/v1/fetchRatings/${movieId}`
     );
+    
+    //console.log("response.data.ratings", response.data);
+
     return { movieId, ratings: response.data.ratings };
   } catch (error) {
     const axiosError = error as AxiosError;

@@ -42,10 +42,13 @@ const fetchRatingsController = async (req, res) => {
     const { movieId } = req.params;
 
     const ratings = await RatingModel.find({ "Ratings.movie": movieId });
+    console.log("rating",ratings);
+
     const allRatings = ratings.flatMap((r) =>
       r.Ratings.filter((rating) => rating.movie.toString() === movieId)
     );
-    res.status(200).json({ allRatings });
+    
+    res.status(200).json({ ratings:allRatings });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

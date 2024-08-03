@@ -21,6 +21,8 @@ const addFavoriteController = async (req, res) => {
   try {
     const { imdbID } = req.body;
     const userId = req.user.id;
+    console.log("imdbID",imdbID);
+    console.log("userId", userId);
 
     const movie = await MoviesModel.findOne({ imdbID });
 
@@ -39,6 +41,7 @@ const addFavoriteController = async (req, res) => {
       });
     }
      const isFavorite = user.favorites.some((fav) => fav.imdbID === imdbID);
+     console.log("isFavorite ", isFavorite);
     if (isFavorite) {
       return res.status(statusCodes.BAD_REQUEST).json({
         success: "false",
