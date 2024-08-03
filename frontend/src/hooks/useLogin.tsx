@@ -5,11 +5,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { login } from "../redux/slices/userSlice";
 import { toast } from "react-toastify";
-
-interface LoginFormInputs {
-  email: string;
-  password: string;
-}
+import { LoginFormInputs } from "../utils/interface/types";
 
 const useLogin = () => {
   const {
@@ -28,7 +24,6 @@ const useLogin = () => {
         "http://localhost:8000/api/v1/login",
         data
       );
-     // console.log("asdf",response.data);
       if (response.data.success) {
         const { user, token } = response.data;
         setLoginError(null);
@@ -38,10 +33,11 @@ const useLogin = () => {
             name: user.name,
             email: user.email,
             phone: user.phone,
-            token, 
+            token,
           })
         );
         localStorage.setItem("authToken", token);
+        localStorage.setItem("userDetails", JSON.stringify(user));
         navigate("/");
         toast.success("Login Successfully");
       } else {

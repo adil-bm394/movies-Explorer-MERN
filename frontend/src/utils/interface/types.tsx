@@ -46,3 +46,7 @@ export interface MoviesState {
   loading: boolean;
   error: string | null;
 }
+export interface LoginFormInputs {
+  email: string;
+  password: string;
+}
