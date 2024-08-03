@@ -2,8 +2,14 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
+interface Comment {
+  userId: string;
+  userName: string;
+  comment: string;
+}
+
 interface UserCommentsProps {
-  comments: { userId: string; userName: string; comment: string }[];
+  comments: Comment[];
 }
 
 const UserComments: React.FC<UserCommentsProps> = ({ comments }) => {

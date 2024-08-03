@@ -19,6 +19,6 @@ router.get("/getfavorites", authMiddleware, getFavoritesController);
 router.post("/addComments/:imdbID",authMiddleware,addCommentController);
 
 // Route to fetch comments
-router.get("/fetchComments/:imdbID", authMiddleware,fetchCommentsController);
+router.get("/fetchComments/:imdbID", fetchCommentsController);
 
 module.exports = router;

@@ -16,12 +16,13 @@ import UserComments from "../components/comments/UserComments";
 import CommentInput from "../components/comments/CommentInput";
 import RatingDisplayComponent from "../components/Rating/RatingDisplayComponent";
 import {
-  saveRatingToIndexedDB,
-  saveCommentToIndexedDB,
-  getCommentsFromIndexedDB,
-} from "../utils/LocalForage/LocalForage";
-import { addRating, addComment } from "../redux/slices/moviesSlice";
+  addRating,
+  addComment,
+  fetchComments,
+} from "../redux/slices/moviesSlice";
 import { Movie } from "../utils/interface/types";
+import { AppDispatch } from "../redux/store";
+import { AxiosError } from "axios";
 
 const MoviesDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,15 +30,14 @@ const MoviesDetailPage: React.FC = () => {
 
   const movie = useSelector((state: RootState) =>
     state.movies.movies.find((m) => m.imdbID === movieId)
-  ) as Movie; // Assert type to Movie
+  ) as Movie;   
 
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const userDetails = useSelector((state: RootState) => state.user.userDetails);
   const userId = userDetails?.id || "";
   const userName = userDetails?.name || "";
 
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch<AppDispatch>();
   const [comments, setComments] = useState<
     { userId: string; userName: string; comment: string }[]
   >([]);
@@ -49,34 +49,51 @@ const MoviesDetailPage: React.FC = () => {
   useEffect(() => {
     if (!movieId) return;
 
-    const fetchComments = async () => {
-      const savedComments = await getCommentsFromIndexedDB(movieId);
-      setComments(savedComments);
-    };
-
-    fetchComments();
-  }, [movieId]);
+    dispatch(fetchComments(movieId))
+      .unwrap()
+      .then((data) => setComments(data.comments))
+      .catch((error) => {
+        const axiosError = error as AxiosError;
+        toast.error(axiosError.message || "Failed to fetch comments");
+      });
+  }, [movieId, dispatch]);
 
   const handleRatingClick = async (value: number) => {
     if (isLoggedIn) {
-      console.log(`User rated ${movie?.Title} with ${value} stars.`);
-      await saveRatingToIndexedDB(movieId, { userId, userName, rating: value });
-      dispatch(addRating({ movieId, rating: value, userId, userName }));
+      try {
+        await dispatch(addRating({ movieId, rating: value, userId, userName }));
+        toast.success("Rating added successfully");
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        toast.error(axiosError.message || "Failed to add rating");
+      }
     } else {
       toast.error("You must be logged in to rate movies.");
     }
   };
 
   const handleCommentSubmit = async (comment: string) => {
-    if (isLoggedIn) {
-      const newComment = { userId, userName, comment };
-      await saveCommentToIndexedDB(movieId, newComment);
-      dispatch(addComment({ movieId, comment, userId, userName }));
-      setComments([...comments, newComment]);
-    } else {
-      toast.error("You must be logged in to add comments.");
+  if (isLoggedIn) {
+    try {
+      const resultAction = await dispatch(
+        addComment({ movieId, comment, userId, userName })
+      ).unwrap();
+
+      // Assuming resultAction.comment is a string, not an object
+      setComments([
+        ...comments,
+        { userId, userName, comment: resultAction.comment },
+      ]);
+
+      toast.success("Comment added successfully");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      toast.error(axiosError.message || "Failed to add comment");
     }
-  };
+  } else {
+    toast.error("You must be logged in to add comments.");
+  }
+};
 
   const handleRatingsFetched = (
     ratings: { userId: string; userName: string; rating: number }[]
