@@ -5,24 +5,18 @@ import Grid from "@mui/material/Grid";
 import MovieCard from "../components/common/MovieCard";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { SimplifiedMovie } from "../utils/interface/types";
 
-// Define a simplified Movie type
-interface SimplifiedMovie {
-  Title: string;
-  Poster: string;
-  Year: string;
-  imdbRating: string;
-  Genre: string;
-  imdbID: string;
-}
 
 const FavoritePage: React.FC = () => {
-  // Assuming favorites are stored in the Redux store
   const favoriteMovies = useSelector(
-    (state: RootState) => state.favorites.favorites // Corrected from `movies` to `favorites`
+    (state: RootState) => state.favorites.favorites 
   );
 
-  // Map to the simplified movie structure
+  if (favoriteMovies.length === 0) {
+    return <Typography>No favorite movies found.</Typography>;
+  }
+
   const simplifiedMovies: SimplifiedMovie[] = favoriteMovies.map((movie) => ({
     Title: movie.Title,
     Poster: movie.Poster,
@@ -31,11 +25,6 @@ const FavoritePage: React.FC = () => {
     Genre: movie.Genre,
     imdbID: movie.imdbID,
   }));
-
-  if (favoriteMovies.length === 0) {
-    return <Typography >No favorite movies found.</Typography>;
-  }
-
 
   return (
     <Container sx={{ width: "92%" }}>

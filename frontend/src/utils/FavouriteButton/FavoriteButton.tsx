@@ -6,16 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import { addFavorite, removeFavorite } from "../../redux/slices/favoritesSlice";
 import { toast } from "react-toastify";
-import { Movie } from "../../utils/interface/types";
+import {  SimplifiedMovie } from "../../utils/interface/types";
 
-interface SimplifiedMovie {
-  Title: string;
-  Poster: string;
-  Year: string;
-  imdbRating: string;
-  Genre: string;
-  imdbID: string;
-}
 interface FavoriteButtonProps {
   movie: SimplifiedMovie;
 }

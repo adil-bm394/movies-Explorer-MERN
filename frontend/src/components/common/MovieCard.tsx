@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Star } from "@mui/icons-material";
 import FavoriteButton from "../../utils/FavouriteButton/FavoriteButton";
+import { SimplifiedMovie } from "../../utils/interface/types";
 
 const StarContainer = styled("div")({
   display: "flex",
@@ -19,17 +20,6 @@ const StarContainer = styled("div")({
 const StarIcon = styled(Star)({
   fill: "yellow",
 });
-
-// Define a simplified Movie type
-interface SimplifiedMovie {
-  Title: string;
-  Poster: string;
-  Year: string;
-  imdbRating: string;
-  Genre: string;
-  imdbID: string;
-}
-
 interface MovieCardProps {
   movie: SimplifiedMovie;
 }
