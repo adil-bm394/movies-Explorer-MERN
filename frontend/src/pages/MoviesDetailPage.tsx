@@ -8,6 +8,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import IconButton from "@mui/material/IconButton";
+import StarIcon from "@mui/icons-material/Star";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { ToastContainer, toast } from "react-toastify";
@@ -226,7 +228,12 @@ const MoviesDetailPage: React.FC = () => {
                 {userRatings.map((rating) => (
                   <ListItem key={rating.userId}>
                     <Typography variant="body1">
-                      <strong>{rating.userName}:</strong> {rating.rating} stars
+                      <strong>{rating.userName}:</strong>{" "}
+                      {Array.from({ length: rating.rating }, (_, index) => (
+                        <IconButton key={index} disabled>
+                          <StarIcon sx={{ color: "yellow" }} />
+                        </IconButton>
+                      ))}
                     </Typography>
                   </ListItem>
                 ))}
