@@ -14,7 +14,6 @@ export const fetchMovies = createAsyncThunk("movies/fetchMovies", async () => {
   return response.data;
 });
 
-// Thunk to add a comment
 export const addComment = createAsyncThunk(
   "movies/addComment",
   async (
@@ -38,8 +37,12 @@ export const addComment = createAsyncThunk(
           userName: payload.userName,
         },
         { headers: { Authorization: `Bearer ${token}` } }
+
       );
-      return { movieId: payload.movieId, comment: response.data.comment };
+
+     // console.log("add comments", response.data.comment.comment);
+
+      return { movieId: payload.movieId, comment: response.data.comment.comment };
     } catch (error) {
       const axiosError = error as AxiosError;
       return rejectWithValue(axiosError.response?.data || "Unknown error");
@@ -47,7 +50,6 @@ export const addComment = createAsyncThunk(
   }
 );
 
-// Thunk to fetch comments
 export const fetchComments = createAsyncThunk(
   "movies/fetchComments",
   async (movieId: string, { rejectWithValue }) => {
@@ -110,7 +112,7 @@ const moviesSlice = createSlice({
         const { movieId, comment } = action.payload;
         const movie = state.movies.find((m) => m._id === movieId);
         if (movie) {
-          movie.comments.push(comment); // Update comments
+          movie.comments.push(comment); 
         }
       })
 
@@ -127,7 +129,7 @@ const moviesSlice = createSlice({
         const { movieId, comments } = action.payload;
         const movie = state.movies.find((m) => m._id === movieId);
         if (movie) {
-          movie.comments = comments; // Update comments
+          movie.comments = comments;
         }
       })
       .addCase(fetchComments.rejected, (state, action) => {
