@@ -17,41 +17,34 @@ interface RatingComponentProps {
 
 const RatingComponent: React.FC<RatingComponentProps> = ({
   movieId,
- handleRatingClick,
+  handleRatingClick,
   initialRating,
   userId,
   userName,
 }) => {
   const [rating, setRating] = useState<number | null>(initialRating);
-  const dispatch: AppDispatch = useDispatch(); // Apply the correct type
+  const dispatch: AppDispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   useEffect(() => {
-    const fetchRatingsData = async () => {
-      if (movieId) {
-        try {
-          const response = await dispatch(fetchRatings(movieId)).unwrap();
-          const userRating = response.ratings.find(
-            (r: { userId: string; rating: number }) => r.userId === userId
-          );
-          setRating(userRating ? userRating.rating : null);
-        } catch (error) {
-          console.error("Failed to fetch ratings", error);
-        }
-      }
-    };
+    if (initialRating !== null) {
+      setRating(initialRating);
+    }
+  }, [initialRating]);
 
-    fetchRatingsData();
-  }, [movieId, dispatch, userId]);
+  const handleClick = (value: number) => {
+    if (isLoggedIn) {
+      setRating(value);
+      handleRatingClick(value); // Notify parent component to update rating
+    } else {
+      console.warn("User is not logged in");
+    }
+  };
 
   return (
     <>
       {[1, 2, 3, 4, 5].map((value) => (
-        <IconButton
-          key={value}
-          onClick={() => handleRatingClick(value)}
-          //disabled={!isLoggedIn}
-        >
+        <IconButton key={value} onClick={() => handleClick(value)}>
           {rating && rating >= value ? (
             <StarIcon sx={{ color: "yellow" }} />
           ) : (

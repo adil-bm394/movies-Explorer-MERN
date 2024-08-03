@@ -17,7 +17,7 @@ const RatingDisplayComponent: React.FC<RatingDisplayComponentProps> = ({
   handleRatingClick,
   onRatingsFetched,
 }) => {
-  const dispatch: AppDispatch = useDispatch(); // Apply the correct type
+  const dispatch: AppDispatch = useDispatch(); 
   const { isLoggedIn, userDetails } = useSelector(
     (state: RootState) => state.user
   );
