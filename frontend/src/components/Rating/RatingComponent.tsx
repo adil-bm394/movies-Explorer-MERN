@@ -1,35 +1,48 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../../redux/store";
+import { fetchRatings } from "../../redux/slices/moviesSlice";
 import IconButton from "@mui/material/IconButton";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 interface RatingComponentProps {
   isLoggedIn: boolean;
   initialRating: number | null;
-  onRatingClick: (value: number) => void;
+  movieId: string;
+  userId: string;
+  userName: string;
+  handleRatingClick: (value: number) => void;
 }
 
 const RatingComponent: React.FC<RatingComponentProps> = ({
-  isLoggedIn,
+  movieId,
+ handleRatingClick,
   initialRating,
-  onRatingClick,
+  userId,
+  userName,
 }) => {
   const [rating, setRating] = useState<number | null>(initialRating);
+  const dispatch: AppDispatch = useDispatch(); // Apply the correct type
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   useEffect(() => {
-    setRating(initialRating);
-  }, [initialRating]);
+    const fetchRatingsData = async () => {
+      if (movieId) {
+        try {
+          const response = await dispatch(fetchRatings(movieId)).unwrap();
+          const userRating = response.ratings.find(
+            (r: { userId: string; rating: number }) => r.userId === userId
+          );
+          setRating(userRating ? userRating.rating : null);
+        } catch (error) {
+          console.error("Failed to fetch ratings", error);
+        }
+      }
+    };
 
-  const handleRatingClick = (value: number) => {
-    if (isLoggedIn) {
-      setRating(value);
-      onRatingClick(value);
-    } else {
-      toast.error("You must be logged in to rate movies.");
-    }
-  };
+    fetchRatingsData();
+  }, [movieId, dispatch, userId]);
 
   return (
     <>

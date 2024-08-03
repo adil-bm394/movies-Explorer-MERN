@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../../redux/store";
+import { fetchRatings } from "../../redux/slices/moviesSlice";
 import RatingComponent from "./RatingComponent";
-import { getRatingsFromIndexedDB } from "../../utils/LocalForage/LocalForage";
-import { RootState } from "../../redux/store";
 
 interface RatingDisplayComponentProps {
   movieId: string;
-  onRatingClick: (value: number) => void;
+  handleRatingClick: (value: number) => void;
   onRatingsFetched: (
     ratings: { userId: string; userName: string; rating: number }[]
   ) => void;
@@ -14,30 +14,35 @@ interface RatingDisplayComponentProps {
 
 const RatingDisplayComponent: React.FC<RatingDisplayComponentProps> = ({
   movieId,
-  onRatingClick,
+  handleRatingClick,
   onRatingsFetched,
 }) => {
-  const [rating, setRating] = useState<number | null>(null);
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  const dispatch: AppDispatch = useDispatch(); // Apply the correct type
+  const { isLoggedIn, userDetails } = useSelector(
+    (state: RootState) => state.user
+  );
 
   useEffect(() => {
-    const fetchRatings = async () => {
-      const savedRatings = await getRatingsFromIndexedDB(movieId);
-      //console.log(`Fetched ratings: ${savedRatings}`); // Debugging line
-      const userRating =
-        savedRatings.length > 0 ? savedRatings[0].rating : null;
-      setRating(userRating);
-      onRatingsFetched(savedRatings);
+    const fetchRatingsData = async () => {
+      try {
+        const response = await dispatch(fetchRatings(movieId)).unwrap();
+        onRatingsFetched(response.ratings);
+      } catch (error) {
+        console.error("Failed to fetch ratings", error);
+      }
     };
 
-    fetchRatings();
-  }, [movieId, onRatingsFetched]);
+    fetchRatingsData();
+  }, [movieId, dispatch, onRatingsFetched]);
 
   return (
     <RatingComponent
       isLoggedIn={isLoggedIn}
-      initialRating={rating}
-      onRatingClick={onRatingClick}
+      initialRating={null}
+      movieId={movieId}
+      userId={userDetails?.id || ""}
+      userName={userDetails?.name || ""}
+      handleRatingClick={handleRatingClick}
     />
   );
 };

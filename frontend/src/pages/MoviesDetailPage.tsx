@@ -30,7 +30,7 @@ const MoviesDetailPage: React.FC = () => {
 
   const movie = useSelector((state: RootState) =>
     state.movies.movies.find((m) => m.imdbID === movieId)
-  ) as Movie;   
+  ) as Movie;
 
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const userDetails = useSelector((state: RootState) => state.user.userDetails);
@@ -51,7 +51,7 @@ const MoviesDetailPage: React.FC = () => {
 
     dispatch(fetchComments(movieId))
       .unwrap()
-      .then((data) => setComments(data.comments))
+      .then((data) => setComments(data.comments || []))
       .catch((error) => {
         const axiosError = error as AxiosError;
         toast.error(axiosError.message || "Failed to fetch comments");
@@ -73,27 +73,26 @@ const MoviesDetailPage: React.FC = () => {
   };
 
   const handleCommentSubmit = async (comment: string) => {
-  if (isLoggedIn) {
-    try {
-      const resultAction = await dispatch(
-        addComment({ movieId, comment, userId, userName })
-      ).unwrap();
+    if (isLoggedIn) {
+      try {
+        const resultAction = await dispatch(
+          addComment({ movieId, comment, userId, userName })
+        ).unwrap();
 
-      // Assuming resultAction.comment is a string, not an object
-      setComments([
-        ...comments,
-        { userId, userName, comment: resultAction.comment },
-      ]);
+        setComments([
+          ...comments,
+          { userId, userName, comment: resultAction.comment },
+        ]);
 
-      toast.success("Comment added successfully");
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      toast.error(axiosError.message || "Failed to add comment");
+        toast.success("Comment added successfully");
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        toast.error(axiosError.message || "Failed to add comment");
+      }
+    } else {
+      toast.error("You must be logged in to add comments.");
     }
-  } else {
-    toast.error("You must be logged in to add comments.");
-  }
-};
+  };
 
   const handleRatingsFetched = (
     ratings: { userId: string; userName: string; rating: number }[]
@@ -196,7 +195,7 @@ const MoviesDetailPage: React.FC = () => {
                   </Typography>
                   <RatingDisplayComponent
                     movieId={movie.imdbID}
-                    onRatingClick={handleRatingClick}
+                    handleRatingClick={handleRatingClick}
                     onRatingsFetched={handleRatingsFetched}
                   />
                 </Box>
@@ -222,7 +221,7 @@ const MoviesDetailPage: React.FC = () => {
             <Typography variant="h6" component="div">
               User Ratings
             </Typography>
-            {userRatings.length > 0 ? (
+            {userRatings?.length > 0 ? (
               <List>
                 {userRatings.map((rating) => (
                   <ListItem key={rating.userId}>
