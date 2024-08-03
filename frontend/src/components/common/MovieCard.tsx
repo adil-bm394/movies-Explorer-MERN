@@ -8,7 +8,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Movie } from "../../utils/interface/types";
 import { Star } from "@mui/icons-material";
 import FavoriteButton from "../../utils/FavouriteButton/FavoriteButton";
 
@@ -21,14 +20,22 @@ const StarIcon = styled(Star)({
   fill: "yellow",
 });
 
+// Define a simplified Movie type
+interface SimplifiedMovie {
+  Title: string;
+  Poster: string;
+  Year: string;
+  imdbRating: string;
+  Genre: string;
+  imdbID: string;
+}
+
 interface MovieCardProps {
-  movie: Movie;
+  movie: SimplifiedMovie;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-
-  console.log("movies in movieCard",movie);
 
   return (
     <Grid item xs={12}>

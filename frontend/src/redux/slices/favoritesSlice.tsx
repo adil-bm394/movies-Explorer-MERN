@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Movie } from "../../utils/interface/types";
+import { Movie, SimplifiedMovie } from "../../utils/interface/types";
 
 interface FavoritesState {
-  favorites: Movie[];
+  favorites: SimplifiedMovie[];
   loading: boolean;
   error: string | null;
 }
-
 const initialState: FavoritesState = {
   favorites: [],
   loading: false,
@@ -43,18 +42,17 @@ export const fetchFavorites = createAsyncThunk(
 
 export const addFavorite = createAsyncThunk(
   "favorites/addFavorite",
-  async (movie: Movie, { rejectWithValue, getState }) => {
+  async (movie: SimplifiedMovie, { rejectWithValue, getState }) => {
     const state = getState() as any;
     const token = state.user.userDetails?.token;
 
     try {
-
       const response = await axios.post(
         "http://localhost:8000/api/v1/addFavorite",
         { imdbID: movie.imdbID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-        console.log("response backend for addFavourite",response.data.favorites);
+      console.log("response backend for addFavourite", response.data.favorites);
       return response.data.favorites;
     } catch (error: any) {
       return rejectWithValue(

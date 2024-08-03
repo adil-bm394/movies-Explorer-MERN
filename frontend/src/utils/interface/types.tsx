@@ -20,6 +20,15 @@ export interface Movie {
   ratings: { userId: string; userName: string; rating: number }[];
 }
 
+export interface SimplifiedMovie {
+  Title: string;
+  Poster: string;
+  Year: string;
+  imdbRating: string;
+  Genre: string;
+  imdbID: string;
+}
+
 export interface RegisterFormInputs {
   id?: string; 
   name: string;

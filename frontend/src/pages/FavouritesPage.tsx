@@ -1,41 +1,46 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Grid from "@mui/material/Grid";
+import React from "react";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import MovieCard from "../components/common/MovieCard";
-import { RootState, AppDispatch } from "../redux/store";
-import { fetchFavorites } from "../redux/slices/favoritesSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
-const FavoritesPage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { favorites, loading, error } = useSelector(
-    (state: RootState) => state.favorites
+// Define a simplified Movie type
+interface SimplifiedMovie {
+  Title: string;
+  Poster: string;
+  Year: string;
+  imdbRating: string;
+  Genre: string;
+  imdbID: string;
+}
+
+const FavoritePage: React.FC = () => {
+  // Assuming favorites are stored in the Redux store
+  const favoriteMovies = useSelector(
+    (state: RootState) => state.favorites.favorites // Corrected from `movies` to `favorites`
   );
 
-  const allFavorites = favorites.flat();
-  console.log("favorites Movies", allFavorites);
+  // Map to the simplified movie structure
+  const simplifiedMovies: SimplifiedMovie[] = favoriteMovies.map((movie) => ({
+    Title: movie.Title,
+    Poster: movie.Poster,
+    Year: movie.Year,
+    imdbRating: movie.imdbRating,
+    Genre: movie.Genre,
+    imdbID: movie.imdbID,
+  }));
 
-  useEffect(() => {
-    dispatch(fetchFavorites());
-  }, [dispatch]);
-
-  if (loading) {
-    return <Typography>Loading...</Typography>;
+  if (favoriteMovies.length === 0) {
+    return <Typography >No favorite movies found.</Typography>;
   }
 
-  if (error) {
-    return <Typography>Error: {error}</Typography>;
-  }
-
-  if (favorites.length === 0) {
-    return <Typography>No favorite movies found.</Typography>;
-  }
 
   return (
-    <Container sx={{ marginTop: "15px" }}>
+    <Container sx={{ width: "92%" }}>
       <Grid container spacing={3}>
-        {allFavorites.map((movie) => (
+        {simplifiedMovies.map((movie) => (
           <Grid item xs={12} sm={6} md={4} key={movie.imdbID}>
             <MovieCard movie={movie} />
           </Grid>
@@ -45,4 +50,4 @@ const FavoritesPage: React.FC = () => {
   );
 };
 
-export default FavoritesPage;
+export default FavoritePage;
