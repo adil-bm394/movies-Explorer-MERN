@@ -1,12 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Movie, SimplifiedMovie } from "../../utils/interface/types";
+import { FavoritesState, Movie, SimplifiedMovie } from "../../utils/interface/types";
 
-interface FavoritesState {
-  favorites: SimplifiedMovie[];
-  loading: boolean;
-  error: string | null;
-}
+
 const initialState: FavoritesState = {
   favorites: [],
   loading: false,

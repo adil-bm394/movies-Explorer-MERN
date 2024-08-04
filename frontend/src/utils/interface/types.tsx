@@ -50,3 +50,33 @@ export interface LoginFormInputs {
   email: string;
   password: string;
 }
+export interface Comment {
+  userId: string;
+  userName: string;
+  comment: string;
+}
+export interface RatingComponentProps {
+  isLoggedIn: boolean;
+  initialRating: number | null;
+  movieId: string;
+  userId: string;
+  userName: string;
+  handleRatingClick: (value: number) => void;
+}
+
+export interface FavoritesState {
+  favorites: SimplifiedMovie[];
+  loading: boolean;
+  error: string | null;
+}
+
+export interface UserState {
+  isLoggedIn: boolean;
+  userDetails: {
+    id?: string;
+    name: string;
+    email: string;
+    phone: string;
+    token: string;
+  } | null;
+}

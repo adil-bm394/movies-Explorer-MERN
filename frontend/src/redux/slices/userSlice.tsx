@@ -1,22 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserState } from "../../utils/interface/types";
 
-interface UserState {
-  isLoggedIn: boolean;
-  userDetails: {
-    id?: string;
-    name: string;
-    email: string;
-    phone: string;
-    token: string; // Add token to user details
-  } | null;
-}
 
 const initialState: UserState = {
   isLoggedIn: false,
   userDetails: null,
 };
 
-// Function to get initial state from localStorage
 const getInitialState = (): UserState => {
   const token = localStorage.getItem("authToken");
   if (token) {
@@ -43,19 +33,17 @@ const userSlice = createSlice({
         name: string;
         email: string;
         phone: string;
-        token: string; // Add token to action payload
+        token: string; 
       }>
     ) => {
       state.isLoggedIn = true;
       state.userDetails = action.payload;
-      // Save token and user details to localStorage
       localStorage.setItem("authToken", action.payload.token);
       localStorage.setItem("userDetails", JSON.stringify(action.payload));
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.userDetails = null;
-      // Remove token and user details from localStorage
       localStorage.removeItem("authToken");
       localStorage.removeItem("userDetails");
     },

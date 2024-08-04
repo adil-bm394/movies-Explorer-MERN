@@ -25,7 +25,7 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+ // const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   return (
     <Grid item xs={12}>

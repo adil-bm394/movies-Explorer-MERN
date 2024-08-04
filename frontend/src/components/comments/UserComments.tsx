@@ -1,18 +1,16 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { Comment } from "../../utils/interface/types";
 
-interface Comment {
-  userId: string;
-  userName: string;
-  comment: string;
-}
+
 
 interface UserCommentsProps {
   comments: Comment[];
 }
 
 const UserComments: React.FC<UserCommentsProps> = ({ comments }) => {
+  console.log("comments",comments);
   return (
     <Box sx={{ marginTop: 2 }}>
       <Typography variant="h6">Comments:</Typography>

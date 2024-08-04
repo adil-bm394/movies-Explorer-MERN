@@ -4,15 +4,9 @@ import { RootState, AppDispatch } from "../../redux/store";
 import IconButton from "@mui/material/IconButton";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import { RatingComponentProps } from "../../utils/interface/types";
 
-interface RatingComponentProps {
-  isLoggedIn: boolean;
-  initialRating: number | null;
-  movieId: string;
-  userId: string;
-  userName: string;
-  handleRatingClick: (value: number) => void;
-}
+
 
 const RatingComponent: React.FC<RatingComponentProps> = ({
   movieId,
@@ -34,7 +28,7 @@ const RatingComponent: React.FC<RatingComponentProps> = ({
   const handleClick = (value: number) => {
     if (isLoggedIn) {
       setRating(value);
-      handleRatingClick(value); // Notify parent component to update rating
+      handleRatingClick(value); 
     } else {
       console.warn("User is not logged in");
     }
