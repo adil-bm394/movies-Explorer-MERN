@@ -18,9 +18,6 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, serverConfig.JWT_SECRET);
     const user = await UserModel.findById(decoded.id);
 
-    // console.log("decoded", decoded); // Logging the decoded token
-    // console.log("user", user._id); // Logging the retrieved user
-
     if (!user) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: false,
@@ -31,7 +28,7 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.error("Authentication error:", error); // Logging the error
+    console.error("Authentication error:", error); 
     return res.status(statusCodes.UNAUTHORIZED).json({
       success: false,
       message: messages.INVALID_TOKEN,

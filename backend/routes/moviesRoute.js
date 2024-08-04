@@ -19,8 +19,6 @@ router.get("/getfavorites", authMiddleware, getFavoritesController);
 router.post("/addComments/:imdbID",authMiddleware,addCommentController);
 router.get("/fetchComments/:imdbID", fetchCommentsController);
 router.post("/addRating",authMiddleware, addRatingController);
-
-// Fetch ratings
 router.get('/fetchRatings/:movieId',fetchRatingsController);
 
 module.exports = router;

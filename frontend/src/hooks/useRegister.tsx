@@ -35,16 +35,16 @@ const useRegister = (): UseRegisterReturn => {
         data
       );
      if (res.data.success) {
-       const { user, token } = res.data; // Ensure your backend returns a token
-       dispatch(
-         login({
-           id: user._id,
-           name: user.name,
-           email: user.email,
-           phone: user.phone,
-           token, // Include token here
-         })
-       );
+       const { user, token } = res.data; 
+      //  dispatch(
+      //    login({
+      //      id: user._id,
+      //      name: user.name,
+      //      email: user.email,
+      //      phone: user.phone,
+      //      token, // Include token here
+      //    })
+      //  );
 
        setRegistrationError(null);
        navigate("/login");

@@ -21,15 +21,13 @@ const addFavoriteController = async (req, res) => {
   try {
     const { imdbID } = req.body;
     const userId = req.user.id;
-    console.log("imdbID",imdbID);
-    console.log("userId", userId);
 
     const movie = await MoviesModel.findOne({ imdbID });
 
     if (!movie) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: "false",
-        message: "Movie Not Found",
+        message: messages.MOVIE_NOT_EXISTS,
       });
     }
 
@@ -37,15 +35,15 @@ const addFavoriteController = async (req, res) => {
     if (!user) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: "false",
-        message: "User Not Found",
+        message: messages.USER_NOT_FOUND,
       });
     }
      const isFavorite = user.favorites.some((fav) => fav.imdbID === imdbID);
-     console.log("isFavorite ", isFavorite);
+     //console.log("isFavorite ", isFavorite);
     if (isFavorite) {
       return res.status(statusCodes.BAD_REQUEST).json({
         success: "false",
-        message: messages.MOVIE_NOT_EXISTS,
+        message: messages.MOVIE_EXISTS,
       });
     }
 
@@ -85,7 +83,7 @@ const removeFavoriteController = async (req, res) => {
     if (!user) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: "false",
-        message: "User Not Found",
+        message: messages.USER_NOT_FOUND,
       });
     }
     const movie = await MoviesModel.findOne({ imdbID });
@@ -93,7 +91,7 @@ const removeFavoriteController = async (req, res) => {
     if (!movie) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: "false",
-        message: "Movie Not Found",
+        message: messages.MOVIE_NOT_EXISTS,
       });
     }
    user.favorites = user.favorites.filter(
@@ -116,12 +114,12 @@ const removeFavoriteController = async (req, res) => {
 
 const getFavoritesController = async (req, res) => {
   try {
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized User.",
-      });
-    }
+   if (!req.user || !req.user.id) {
+     return res.status(statusCodes.UNAUTHORIZED).json({
+       success: false,
+       message: messages.MISSING_AUTH_HEADER,
+     });
+   }
 
     const userId = req.user.id;
     const user = await UserModel.findById(userId);
@@ -129,29 +127,31 @@ const getFavoritesController = async (req, res) => {
     if (!user) {
       return res.status(statusCodes.NOT_FOUND).json({
         success: "false",
-        message: "User Not Found",
+        message: messages.USER_NOT_FOUND,
       });
     }
 
     const favoriteMovies = user.favorites;
 
     if (!favoriteMovies || favoriteMovies.length === 0) {
-      return res.status(200).json({
-        success: true,
-        message: "No favorite movies found.",
-        favorites: [],
-      });
+     res.status(statusCodes.OK).json({
+       success: true,
+       message: messages.NO_FAVORITES_FOUND,
+       favorites: [],
+     });
     }
-    res.status(200).json({
+    
+    res.status(statusCodes.OK).json({
       success: true,
-      message: "Favorites fetched successfully.",
+      message: messages.FAVORITES_FETCHED_SUCCESSFULLY,
       favorites: favoriteMovies,
     });
+
   } catch (error) {
     console.error(error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: "Internal Server Error.",
+      message: messages.INTERNAL_SERVER_ERROR,
       error: error.message,
     });
   }
