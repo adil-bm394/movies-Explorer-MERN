@@ -31,7 +31,7 @@ const useRegister = (): UseRegisterReturn => {
   const onSubmit = async (data: RegisterFormInputs) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/register",
+        "https://movies-explorer-mern.onrender.com/api/v1/register",
         data
       );
      if (res.data.success) {

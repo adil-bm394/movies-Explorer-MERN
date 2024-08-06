@@ -12,7 +12,9 @@ const initialState: MoviesState = {
 export const fetchMovies = createAsyncThunk<Movie[]>(
   "movies/fetchMovies",
   async () => {
-    const response = await axios.get("http://localhost:8000/api/v1/movies");
+    const response = await axios.get(
+      "https://movies-explorer-mern.onrender.com/api/v1/movies"
+    );
     return response.data.movies;
   }
 );
@@ -33,7 +35,7 @@ export const addComment = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/addComments/${payload.movieId}`,
+        `https://movies-explorer-mern.onrender.com/api/v1/addComments/${payload.movieId}`,
         {
           commentText: payload.comment,
           userId: payload.userId,
@@ -69,7 +71,7 @@ export const addRating = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/addRating",
+        "https://movies-explorer-mern.onrender.com/api/v1/addRating",
         {
           movieId: payload.movieId,
           rating: payload.rating,
@@ -97,7 +99,7 @@ export const fetchComments = createAsyncThunk(
   async (movieId: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/fetchComments/${movieId}`
+        `https://movies-explorer-mern.onrender.com/api/v1/fetchComments/${movieId}`
       );
 
       return { movieId, comments: response.data.comments };
@@ -117,7 +119,7 @@ export const fetchRatings = createAsyncThunk<
 >("movies/fetchRatings", async (movieId: string, { rejectWithValue }) => {
   try {
     const response = await axios.get(
-      `http://localhost:8000/api/v1/fetchRatings/${movieId}`
+      `https://movies-explorer-mern.onrender.com/api/v1/fetchRatings/${movieId}`
     );
     
     //console.log("response.data.ratings", response.data);

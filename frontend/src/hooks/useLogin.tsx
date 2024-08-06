@@ -21,7 +21,7 @@ const useLogin = () => {
   const onSubmit = async (data: LoginFormInputs) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/login",
+        "https://movies-explorer-mern.onrender.com/api/v1/login",
         data
       );
       if (response.data.success) {

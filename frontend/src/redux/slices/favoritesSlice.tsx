@@ -17,7 +17,7 @@ export const fetchFavorites = createAsyncThunk(
 
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/getfavorites",
+        "https://movies-explorer-mern.onrender.com/api/v1/getfavorites",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -44,7 +44,7 @@ export const addFavorite = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/addFavorite",
+        "https://movies-explorer-mern.onrender.com/api/v1/addFavorite",
         { imdbID: movie.imdbID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -67,7 +67,7 @@ export const removeFavorite = createAsyncThunk(
     try {
       
       const response = await axios.post(
-        "http://localhost:8000/api/v1/removeFavorite",
+        "https://movies-explorer-mern.onrender.com/api/v1/removeFavorite",
         { imdbID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
