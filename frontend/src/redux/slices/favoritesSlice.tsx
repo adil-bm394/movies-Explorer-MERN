@@ -48,7 +48,7 @@ export const addFavorite = createAsyncThunk(
         { imdbID: movie.imdbID },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log("response backend for addFavourite", response.data.favorites);
+     // console.log("response backend for addFavourite", response.data.favorites);
       return response.data.favorites;
     } catch (error: any) {
       return rejectWithValue(
